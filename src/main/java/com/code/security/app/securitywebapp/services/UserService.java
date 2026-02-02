@@ -11,6 +11,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -22,6 +23,8 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
 
 
     public UserDetails loadUserByUsername(String username)
@@ -39,14 +42,14 @@ public class UserService implements UserDetailsService {
         UserEntity userEntity = modelMapper.map(signUpDTO,UserEntity.class);
         /*Checking for existence of user with username because if done with ID,
         which is generated after the user has been persisted, so the id becomes null for a
-        user which hasnt persisted yet.
-
+        user which hasn't persisted yet.
          */
         if (userRepository.existsByUsername(userEntity.getUsername())) {
             throw new BadCredentialsException("Already Registered");
         }
         else{
-            // Else saving the entity
+            // Else encoding the password and then saving the entity.
+            userEntity.setPassword(bCryptPasswordEncoder.encode(signUpDTO.getPassword()));
             userRepository.save(userEntity);
             return modelMapper.map(userEntity,UserDTO.class);
         }
