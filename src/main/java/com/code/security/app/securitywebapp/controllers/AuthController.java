@@ -1,5 +1,6 @@
 package com.code.security.app.securitywebapp.controllers;
 
+import com.code.security.app.securitywebapp.dtos.LoginDTO;
 import com.code.security.app.securitywebapp.dtos.SignUpDTO;
 import com.code.security.app.securitywebapp.dtos.UserDTO;
 import com.code.security.app.securitywebapp.services.UserService;
@@ -17,9 +18,16 @@ public class AuthController {
 
     private final UserService userService;
 
+    // PostMapping because we are going to send data/credentials
     @PostMapping("/signup")
     public ResponseEntity<UserDTO> signup(@RequestBody SignUpDTO signUpDTO) {
         return ResponseEntity.ok(userService.signup(signUpDTO));
+    }
+
+    // PostMapping because we are going to send data/credentials
+    @PostMapping("/login")
+    public ResponseEntity<UserDTO> login(@RequestBody LoginDTO loginDTO){
+        return ResponseEntity.ok(userService.login(loginDTO));
     }
 
 

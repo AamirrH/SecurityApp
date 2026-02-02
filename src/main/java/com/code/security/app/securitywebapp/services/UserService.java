@@ -1,12 +1,14 @@
 package com.code.security.app.securitywebapp.services;
 
 
+import com.code.security.app.securitywebapp.dtos.LoginDTO;
 import com.code.security.app.securitywebapp.dtos.SignUpDTO;
 import com.code.security.app.securitywebapp.dtos.UserDTO;
 import com.code.security.app.securitywebapp.entities.UserEntity;
 import com.code.security.app.securitywebapp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -52,6 +54,27 @@ public class UserService implements UserDetailsService {
             userEntity.setPassword(bCryptPasswordEncoder.encode(signUpDTO.getPassword()));
             userRepository.save(userEntity);
             return modelMapper.map(userEntity,UserDTO.class);
+        }
+
+    }
+
+    public UserDTO login(LoginDTO loginDTO) {
+        // Get the password and encode it.
+        String loginPassword = bCryptPasswordEncoder.encode(loginDTO.getPassword());
+        // Get the UserEntity by its email.
+        UserEntity userEntity = userRepository.findByEmail(loginDTO.getEmail()).orElseThrow(
+                () -> new BadCredentialsException("User not found")
+        );
+//        if(userEntity.getPassword().equals(loginPassword)){
+//            return modelMapper.map(userEntity,UserDTO.class);
+//
+//        }
+//        this is wrong because bCrypt Hashes are different everytime.
+        if(bCryptPasswordEncoder.matches(loginDTO.getPassword(),userEntity.getPassword())){
+            return modelMapper.map(userEntity,UserDTO.class);
+        }
+        else{
+            return null;
         }
 
     }
