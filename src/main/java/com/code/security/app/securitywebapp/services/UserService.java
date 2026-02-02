@@ -13,24 +13,36 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 
 @Service
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
-
     private final ModelMapper modelMapper;
 
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return null;
+    public UserDetails loadUserByUsername(String username)
+            throws UsernameNotFoundException {
+
+        UserEntity user = userRepository.findByUsername(username)
+                .orElseThrow(() ->
+                        new UsernameNotFoundException("User not found")
+                );
+
+        return user; // ONLY if UserEntity implements UserDetails
     }
 
     public UserDTO signup(SignUpDTO signUpDTO) {
         UserEntity userEntity = modelMapper.map(signUpDTO,UserEntity.class);
-        if(userRepository.existsById(userEntity.getId())){
+        /*Checking for existence of user with username because if done with ID,
+        which is generated after the user has been persisted, so the id becomes null for a
+        user which hasnt persisted yet.
+
+         */
+        if (userRepository.existsByUsername(userEntity.getUsername())) {
             throw new BadCredentialsException("Already Registered");
         }
         else{
