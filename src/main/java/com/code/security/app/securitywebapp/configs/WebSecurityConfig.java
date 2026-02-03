@@ -3,6 +3,7 @@ package com.code.security.app.securitywebapp.configs;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -11,20 +12,28 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
-@EnableWebSecurity
+@EnableWebSecurity // Helps us to customise the filter chain
 public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .securityMatcher("/**")
+                // Through this every request will get authenticated.
                 .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll()
-                )
-                .csrf(csrf -> csrf.disable())
-                .formLogin(form -> form.disable())
-                .httpBasic(basic -> basic.disable());
-
+                        // Permit certain routes without authentication for all users.
+                        .requestMatchers("/home","/SecurityApp/login","/SecurityApp/signup")
+                        .permitAll()
+                        // Permit certain endpoints for users with a specific role without auth
+                        .requestMatchers("/More").hasAnyRole("USER","ADMIN")
+                        .anyRequest()
+                        .authenticated())
+                // Disable CSRF
+                .csrf(csrfConfigurer -> csrfConfigurer.disable())
+                // Disable Sessions and enable Stateless authentication (Session ID
+                // no longer stored in inMemDB
+                .sessionManagement(sessionConfig ->
+                        sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+//                .formLogin(Customizer.withDefaults());
         return http.build();
     }
 
