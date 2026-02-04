@@ -1,5 +1,7 @@
 package com.code.security.app.securitywebapp.configs;
 
+import com.code.security.app.securitywebapp.filters.JWTAuthFilter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -12,10 +14,14 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity // Helps us to customise the filter chain
+@RequiredArgsConstructor
 public class WebSecurityConfig {
+
+    private final JWTAuthFilter authFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -23,7 +29,7 @@ public class WebSecurityConfig {
                 // Through this every request will get authenticated.
                 .authorizeHttpRequests(auth -> auth
                         // Permit certain routes without authentication for all users.
-                        .requestMatchers("/home","/SecurityApp/login","/SecurityApp/signup")
+                        .requestMatchers("/SecurityApp/login","/SecurityApp/signup")
                         .permitAll()
                         // Permit certain endpoints for users with a specific role without auth
                         .requestMatchers("/More").hasAnyRole("USER","ADMIN")
@@ -34,15 +40,14 @@ public class WebSecurityConfig {
                 // Disable Sessions and enable Stateless authentication (Session ID
                 // no longer stored in inMemDB
                 .sessionManagement(sessionConfig ->
-                        sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                        sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                // Adds the authfilter before UPAFilter
+                .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class);
+
 //                .formLogin(Customizer.withDefaults());
         return http.build();
     }
 
-    @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 
     @Bean
     AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {

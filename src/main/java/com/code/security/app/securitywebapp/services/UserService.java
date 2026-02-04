@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.Optional;
 
@@ -39,6 +40,13 @@ public class UserService implements UserDetailsService {
 
         return user; // ONLY if UserEntity implements UserDetails
     }
+
+    public UserEntity getUserByUserId(Long UserID){
+        return userRepository.findById(UserID).orElseThrow(() -> new UsernameNotFoundException("ID not Found"));
+    }
+
+
+
 
     public UserDTO signup(SignUpDTO signUpDTO) {
         UserEntity userEntity = modelMapper.map(signUpDTO,UserEntity.class);
