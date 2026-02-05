@@ -18,9 +18,9 @@ public class LoginService {
 
     // Updated Login Method
     public LoginResponseDTO login(LoginDTO loginDTO){
+        System.out.println("Test - 1");
         Authentication auth = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        loginDTO.getEmail(), loginDTO.getPassword()));
+                new UsernamePasswordAuthenticationToken(loginDTO.getEmail(), loginDTO.getPassword()));
         // Used to get the user-entity which has been authenticated
         UserEntity userEntity = (UserEntity) auth.getPrincipal();
         String accessToken = jwtService.generateJWTAccessToken(userEntity);

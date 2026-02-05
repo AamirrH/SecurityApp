@@ -35,13 +35,22 @@ public class AuthController {
     public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginDTO loginDTO, HttpServletRequest request,
                                                   HttpServletResponse response) {
         LoginResponseDTO loginResponseDTO = loginService.login(loginDTO);
+        System.out.println("Checkpoint - 2");
         // Creating a cookie and storing this token
-        Cookie cookie = new Cookie("AccessToken ", loginResponseDTO.getAccessToken());
+        // Cookie name cant contain white spaces -> empty response in Postman
+        Cookie cookie = new Cookie("AccessToken", loginResponseDTO.getAccessToken());
         cookie.setHttpOnly(true);
         response.addCookie(cookie);
+
         return ResponseEntity.ok(loginResponseDTO);
 
     }
+
+//    @PostMapping("/refresh")
+//    public ResponseEntity<LoginResponseDTO> refresh (){
+//
+//    }
+
 
 
 }

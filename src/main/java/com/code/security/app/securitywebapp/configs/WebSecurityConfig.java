@@ -35,6 +35,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/More").hasAnyRole("USER","ADMIN")
                         .anyRequest()
                         .authenticated())
+                .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
                 // Disable CSRF
                 .csrf(csrfConfigurer -> csrfConfigurer.disable())
                 // Disable Sessions and enable Stateless authentication (Session ID
@@ -43,6 +44,7 @@ public class WebSecurityConfig {
                         sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 // Adds the authfilter before UPAFilter
                 .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class);
+
 
 //                .formLogin(Customizer.withDefaults());
         return http.build();

@@ -1,12 +1,12 @@
 package com.code.security.app.securitywebapp.dtos;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 public class LoginResponseDTO {
 
     private Long id;

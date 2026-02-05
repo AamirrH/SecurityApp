@@ -27,13 +27,11 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-
-
-
-    public UserDetails loadUserByUsername(String username)
+    
+    public UserDetails loadUserByUsername(String email)
             throws UsernameNotFoundException {
 
-        UserEntity user = userRepository.findByUsername(username)
+        UserEntity user = userRepository.findByEmail(email)
                 .orElseThrow(() ->
                         new UsernameNotFoundException("User not found")
                 );
