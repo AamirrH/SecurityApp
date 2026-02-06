@@ -14,8 +14,8 @@ public class SecurityController {
 
     @GetMapping("/home")
     public String testAPI(){
-        UserEntity user = (UserEntity) SecurityContextHolder.getContext().getAuthentication();
-        System.out.println(user);
+//        UserEntity user = (UserEntity) SecurityContextHolder.getContext().getAuthentication();
+//        System.out.println(user);
         return "Welcome to the Home Page";
     }
 
