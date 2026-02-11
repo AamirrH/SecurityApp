@@ -131,9 +131,7 @@ Explains how CSRF works and how Spring Security protects against it.
 
 * Refresh token support
 * Database-backed users & roles
-* Rate limiting
 * OAuth2 integration
-* API documentation (Swagger/OpenAPI)
 
 ---
 
