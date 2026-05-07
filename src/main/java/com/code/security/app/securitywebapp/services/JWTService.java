@@ -25,7 +25,7 @@ public class JWTService {
 
 
     // Generating a JWT Access Token
-    // Access Token is short-lived
+    //  is short-lived
 
     public String generateJWTAccessToken(UserEntity userEntity){
         // builder -> builds the token , parser -> parses/breaks the token

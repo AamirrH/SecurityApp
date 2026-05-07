@@ -47,7 +47,7 @@ public class JWTAuthFilter extends OncePerRequestFilter {
 
         // The token is actually present as :- "Bearer fjgunehsfjunsefn8utjhngejht04j"
 
-        // If we dont get any token due to some error or the token does not start with "Bearer .."
+        // If we don't get any token due to some error or the token does not start with "Bearer .."
         if(token == null || !(token.startsWith("Bearer "))) {
             // pass the request through the filter chain as it is
             filterChain.doFilter(request, response);

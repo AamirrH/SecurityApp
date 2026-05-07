@@ -1,9 +1,7 @@
 package com.code.security.app.securitywebapp.entities;
 
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,6 +17,8 @@ email, password, Roles and id
 @Entity
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class UserEntity implements UserDetails {
 
@@ -29,10 +29,6 @@ public class UserEntity implements UserDetails {
     private String password;
     private String email;
     private List<String> roles;
-
-    public UserEntity() {
-
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
