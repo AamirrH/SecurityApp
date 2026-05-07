@@ -48,11 +48,11 @@ public class AuthController {
 
     @PostMapping("/refresh")
     public ResponseEntity<LoginResponseDTO> refresh (HttpServletRequest request) {
-        String RefreshToken = new String();
+        String RefreshToken = "";
         Cookie[] cookies = request.getCookies();
-        for(int index = 0; index < cookies.length; index++) {
-            if(cookies[index].getName().equals("RefreshToken")) {
-                RefreshToken = cookies[index].getValue();
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals("RefreshToken")) {
+                RefreshToken = cookie.getValue();
                 break;
             }
         }

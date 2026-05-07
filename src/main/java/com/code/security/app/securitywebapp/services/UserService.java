@@ -42,6 +42,13 @@ public class UserService implements UserDetailsService {
     public UserEntity getUserByUserId(Long UserID){
         return userRepository.findById(UserID).orElseThrow(() -> new UsernameNotFoundException("ID not Found"));
     }
+    public UserEntity getUserByEmail(String email){
+        return userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("Email not found"));
+    }
+
+    public UserEntity save(UserEntity userEntity){
+        return userRepository.save(userEntity);
+    }
 
 
 

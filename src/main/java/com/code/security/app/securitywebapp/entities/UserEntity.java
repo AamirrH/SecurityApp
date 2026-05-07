@@ -1,6 +1,7 @@
 package com.code.security.app.securitywebapp.entities;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.jspecify.annotations.Nullable;
@@ -18,6 +19,7 @@ email, password, Roles and id
 @Entity
 @Getter
 @Setter
+@Builder
 public class UserEntity implements UserDetails {
 
     @Id
@@ -27,6 +29,10 @@ public class UserEntity implements UserDetails {
     private String password;
     private String email;
     private List<String> roles;
+
+    public UserEntity() {
+
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
