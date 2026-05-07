@@ -84,7 +84,7 @@ mvn spring-boot:run
 The app will start on:
 
 ```
-http://localhost:8080
+http://localhost:8090
 ```
 
 ---
@@ -131,9 +131,7 @@ Explains how CSRF works and how Spring Security protects against it.
 
 * Refresh token support
 * Database-backed users & roles
-* Rate limiting
 * OAuth2 integration
-* API documentation (Swagger/OpenAPI)
 
 ---
 
