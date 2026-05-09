@@ -1,11 +1,13 @@
 package com.code.security.app.securitywebapp.configs;
 
+import com.code.security.app.securitywebapp.entities.enums.Roles;
 import com.code.security.app.securitywebapp.filters.JWTAuthFilter;
 import com.code.security.app.securitywebapp.handlers.OAuth2SuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -19,13 +21,17 @@ import org.springframework.security.oauth2.client.registration.InMemoryClientReg
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import static com.code.security.app.securitywebapp.entities.enums.Roles.SECURITY_ADMIN;
+
 @Configuration
-@EnableWebSecurity // Helps us to customise the filter chain
+@EnableWebSecurity // Helps us to customize the filter chain
 @RequiredArgsConstructor
 public class WebSecurityConfig {
 
     private final JWTAuthFilter authFilter;
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
+    private static final String [] routes = {"/SecurityApp/login","/SecurityApp/signup","/home.html/**"};
+
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -33,8 +39,9 @@ public class WebSecurityConfig {
                 // Through this every request will get authenticated.
                 .authorizeHttpRequests(auth -> auth
                         // Permit certain routes without authentication for all users.
-                        .requestMatchers("/SecurityApp/login","/SecurityApp/signup","/home.html/**")
-                        .permitAll()
+                        .requestMatchers(routes).permitAll()
+                        // Now only users with the Admin role will be able to access the test route
+                        .requestMatchers(HttpMethod.GET,"/SecurityApp/test").hasRole(SECURITY_ADMIN.name())
                         // Permit certain endpoints for users with a specific role without auth
                         .requestMatchers("/More").hasAnyRole("USER","ADMIN")
                         .anyRequest()

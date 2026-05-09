@@ -35,7 +35,7 @@ public class JWTService {
                  non-sensitive data */
                 .claim("email", userEntity.getEmail())
                 .claim("username", userEntity.getUsername())
-                .claim("roles",userEntity.getRoles())
+                .claim("roles",userEntity.getRoles().toString())
                 // IAT -> the time in milliseconds when the token was issued
                 .issuedAt(new Date(System.currentTimeMillis()))
                 // expiration -> the time after which token will get expired
