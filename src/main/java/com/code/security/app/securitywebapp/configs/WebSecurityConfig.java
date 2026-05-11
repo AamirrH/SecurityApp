@@ -1,31 +1,23 @@
 package com.code.security.app.securitywebapp.configs;
 
-import com.code.security.app.securitywebapp.entities.enums.Roles;
 import com.code.security.app.securitywebapp.filters.JWTAuthFilter;
 import com.code.security.app.securitywebapp.handlers.OAuth2SuccessHandler;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
-import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 
 import static com.code.security.app.securitywebapp.entities.enums.Roles.SECURITY_ADMIN;
-import static com.code.security.app.securitywebapp.entities.enums.Roles.SECURITY_USER;
 
 @Configuration
 @EnableWebSecurity // Helps us to customize the filter chain
@@ -36,6 +28,13 @@ public class WebSecurityConfig {
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
     private static final String [] routes = {"/SecurityApp/login","/SecurityApp/signup"};
 
+
+    @Bean
+    public FilterRegistrationBean<JWTAuthFilter> jwtAuthFilterRegistration(JWTAuthFilter filter) {
+        FilterRegistrationBean<JWTAuthFilter> registration = new FilterRegistrationBean<>(filter);
+        registration.setEnabled(false);
+        return registration;
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -59,6 +58,11 @@ public class WebSecurityConfig {
                         // fallsback to failureURL if auth is incorrect.
                         .failureUrl("/login?error=true")
                         .successHandler(oAuth2SuccessHandler)
+                )
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
+                        .accessDeniedHandler((req, res, e) ->
+                                res.sendError(HttpServletResponse.SC_FORBIDDEN))
                 );
 //                .formLogin(Customizer.withDefaults());
         return http.build();
