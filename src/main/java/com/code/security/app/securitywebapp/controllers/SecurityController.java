@@ -17,7 +17,7 @@ public class SecurityController {
     @GetMapping("/home")
     public ResponseEntity<TestDTO> testAPI(){
         TestDTO testDTO = new TestDTO();
-        testDTO.setTestMessage("Hello World");
+        testDTO.setTestMessage("You are an Admin");
         return ResponseEntity.ok(testDTO);
     }
 

@@ -25,6 +25,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 
 import static com.code.security.app.securitywebapp.entities.enums.Roles.SECURITY_ADMIN;
+import static com.code.security.app.securitywebapp.entities.enums.Roles.SECURITY_USER;
 
 @Configuration
 @EnableWebSecurity // Helps us to customize the filter chain
@@ -43,10 +44,8 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // Permit certain routes without authentication for all users.
                         .requestMatchers(routes).permitAll()
-                        // Now only users with the Admin role will be able to access the test route
-                        .requestMatchers(HttpMethod.GET,"/SecurityApp/home").hasRole(SECURITY_ADMIN.name())
-                        // Permit certain endpoints for users with a specific role without auth
-                        .requestMatchers("/More").hasAnyRole("USER","ADMIN")
+                        // Now only users with the Admin role will be able to access the home route
+                        .requestMatchers("/SecurityApp/home").hasRole(SECURITY_ADMIN.name())
                         .anyRequest()
                         .authenticated())
                 // Disable CSRF

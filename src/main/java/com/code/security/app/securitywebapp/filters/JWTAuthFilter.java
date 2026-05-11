@@ -20,7 +20,7 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.io.IOException;
 
-@Configuration
+
 @RequiredArgsConstructor
 @Component
 public class JWTAuthFilter extends OncePerRequestFilter {
@@ -44,6 +44,8 @@ public class JWTAuthFilter extends OncePerRequestFilter {
         try {
         // Extracting token from the request, Headers are in key-value pairs and the key for the token is "Authorization"
         final String token  = request.getHeader("Authorization");
+        System.out.println(token);
+            System.out.println("JWT FILTER HIT");
 
         // The token is actually present as :- "Bearer fjgunehsfjunsefn8utjhngejht023t2t3.55rsgretertg.53454j"
 
@@ -66,13 +68,15 @@ public class JWTAuthFilter extends OncePerRequestFilter {
                 UserEntity userEntity = userService.getUserByUserId(userId);
                 // Creating an authentication token
                 UsernamePasswordAuthenticationToken usernamepasswordauthToken
-                        = new UsernamePasswordAuthenticationToken(userEntity, userEntity.getPassword(), userEntity.getAuthorities());
+                        = new UsernamePasswordAuthenticationToken(userEntity, null, userEntity.getAuthorities());
                 usernamepasswordauthToken.setDetails(new WebAuthenticationDetailsSource()
                         .buildDetails(request));
+                System.out.println("Authorities "+userEntity.getAuthorities());
                 // Putting the User into the Spring Security Context Holder
                 SecurityContextHolder.getContext().setAuthentication(usernamepasswordauthToken);
+                System.out.println("Context Reached");
             }
-            filterChain.doFilter(request, response);
+
 
         }
 
@@ -80,6 +84,8 @@ public class JWTAuthFilter extends OncePerRequestFilter {
         catch(Exception e){
             handlerExceptionResolver.resolveException(request,response,null,e);
         }
+        filterChain.doFilter(request, response);
+        System.out.println("Filtering Done");
 
 
 
