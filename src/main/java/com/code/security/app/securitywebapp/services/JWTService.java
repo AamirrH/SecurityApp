@@ -39,7 +39,7 @@ public class JWTService {
                 // IAT -> the time in milliseconds when the token was issued
                 .issuedAt(new Date(System.currentTimeMillis()))
                 // expiration -> the time after which token will get expired
-                .expiration(new Date(System.currentTimeMillis()+60*1000))
+                .expiration(new Date(System.currentTimeMillis()+60*1000*10))
                 // Sign it with the encoded signature using a secret Key
                 .signWith(HMACGeneratedKey())
                 .compact();
@@ -62,7 +62,7 @@ public class JWTService {
                 .issuedAt(new Date(System.currentTimeMillis()))
                 // expiration -> the time after which token will get expired, after 10 minutes
 
-                .expiration(new Date(System.currentTimeMillis()+1000*10*60))
+                .expiration(new Date(System.currentTimeMillis()+1000*30*60))
                 // Sign it with the encoded signature using a secret Key
                 .signWith(HMACGeneratedKey())
                 .compact();

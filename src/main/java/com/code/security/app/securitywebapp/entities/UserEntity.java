@@ -41,7 +41,7 @@ public class UserEntity implements UserDetails {
     @Override
     // What kind of Authority does the user have? What actions can they perform?
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles.stream().map(role -> new SimpleGrantedAuthority(role.name()))
+        return roles.stream().map(role -> new SimpleGrantedAuthority("ROLE_"+role.name()))
                 .collect(Collectors.toSet());
     }
 

@@ -45,7 +45,7 @@ public class JWTAuthFilter extends OncePerRequestFilter {
         // Extracting token from the request, Headers are in key-value pairs and the key for the token is "Authorization"
         final String token  = request.getHeader("Authorization");
 
-        // The token is actually present as :- "Bearer fjgunehsfjunsefn8utjhngejht04j"
+        // The token is actually present as :- "Bearer fjgunehsfjunsefn8utjhngejht023t2t3.55rsgretertg.53454j"
 
         // If we don't get any token due to some error or the token does not start with "Bearer .."
         if(token == null || !(token.startsWith("Bearer "))) {
