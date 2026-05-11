@@ -26,15 +26,7 @@ public class WebSecurityConfig {
 
     private final JWTAuthFilter authFilter;
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
-    private static final String [] routes = {"/SecurityApp/login","/SecurityApp/signup"};
-
-
-    @Bean
-    public FilterRegistrationBean<JWTAuthFilter> jwtAuthFilterRegistration(JWTAuthFilter filter) {
-        FilterRegistrationBean<JWTAuthFilter> registration = new FilterRegistrationBean<>(filter);
-        registration.setEnabled(false);
-        return registration;
-    }
+    private static final String [] routes = {"/SecurityApp/login","/SecurityApp/signup","/error"};
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -58,12 +50,8 @@ public class WebSecurityConfig {
                         // fallsback to failureURL if auth is incorrect.
                         .failureUrl("/login?error=true")
                         .successHandler(oAuth2SuccessHandler)
-                )
-                .exceptionHandling(ex -> ex
-                        .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
-                        .accessDeniedHandler((req, res, e) ->
-                                res.sendError(HttpServletResponse.SC_FORBIDDEN))
                 );
+
 //                .formLogin(Customizer.withDefaults());
         return http.build();
     }
