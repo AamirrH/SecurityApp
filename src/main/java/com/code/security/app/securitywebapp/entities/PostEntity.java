@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
+@Table(name = "posts")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -15,13 +16,14 @@ public class PostEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long post_id;
+    private Long id;
 
-    @Column(length = 100)
     private String title;
 
-    @Column(length = 100)
-    private String content;
+    private String description;
+
+    @ManyToOne
+    private UserEntity author;
 
 
 }
