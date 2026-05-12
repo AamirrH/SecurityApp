@@ -1,10 +1,12 @@
 package com.code.security.app.securitywebapp.configs;
 
+import com.code.security.app.securitywebapp.entities.enums.Permissions;
 import com.code.security.app.securitywebapp.filters.JWTAuthFilter;
 import com.code.security.app.securitywebapp.handlers.OAuth2SuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,6 +15,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import static com.code.security.app.securitywebapp.entities.enums.Permissions.POST_CREATE;
+import static com.code.security.app.securitywebapp.entities.enums.Permissions.POST_VIEW;
 import static com.code.security.app.securitywebapp.entities.enums.Roles.SECURITY_ADMIN;
 
 @Configuration
@@ -33,6 +37,13 @@ public class WebSecurityConfig {
                         .requestMatchers(routes).permitAll()
                         // Now only users with the Admin role will be able to access the home route
                         .requestMatchers("/SecurityApp/home").hasRole(SECURITY_ADMIN.name())
+                        // Only users with post-view permission can view the posts.
+                        .requestMatchers(HttpMethod.GET,"SecurityApp/posts").hasAuthority(POST_VIEW.name())
+                        // Only users with post-view permission can view the posts.
+                        .requestMatchers("SecurityApp/posts/**").hasAuthority(POST_VIEW.name())
+                        // Only users with post-create permission can view the posts.
+                        .requestMatchers(HttpMethod.POST,"SecurityApp/posts").hasAuthority(POST_CREATE.name())
+                        .requestMatchers("SecurityApp/posts").hasAuthority(Permissions.POST_VIEW.name())
                         .anyRequest()
                         .authenticated())
                 // Disable CSRF

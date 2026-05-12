@@ -1,5 +1,6 @@
 package com.code.security.app.securitywebapp.dtos;
 
+import com.code.security.app.securitywebapp.entities.enums.Permissions;
 import com.code.security.app.securitywebapp.entities.enums.Roles;
 import jakarta.validation.constraints.Email;
 import lombok.Data;
@@ -23,6 +24,7 @@ public class SignUpDTO {
     private String password;
 
     private Set<Roles> roles;
+    private Set<Permissions> permissions;
 
 
 }
