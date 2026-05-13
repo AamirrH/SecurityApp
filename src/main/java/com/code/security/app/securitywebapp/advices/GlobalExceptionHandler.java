@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.security.sasl.AuthenticationException;
+import java.nio.file.AccessDeniedException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -31,6 +32,12 @@ public class GlobalExceptionHandler {
     exception comes during the Security Filter Chain/ Security context, so exception handlers
     cant handle it.
      */
+
+    @ExceptionHandler(AccessDeniedException.class)
+    // Instead of taking the user to OAuth2.0 Login Page if the auth fails it shows a Forbidden Page
+    public ResponseEntity<String> handleAccessDeniedException(AccessDeniedException e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+    }
 
 
 }

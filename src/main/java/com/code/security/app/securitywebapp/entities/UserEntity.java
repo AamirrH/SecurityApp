@@ -24,7 +24,6 @@ email, password, Roles and id
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@RequiredArgsConstructor
 @Builder
 public class UserEntity implements UserDetails {
 
